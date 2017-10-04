@@ -1,0 +1,31 @@
+{
+  "name": "marker-navigation",
+  "version": "0.1.0",
+  "description": "A Google Maps utility library that allows users to navigate the markers on screen with tab and shift-tab",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*.js",
+    "istanbul": "istanbul cover mocha test/*.js",
+    "lint": "./node_modules/.bin/eslint index.js",
+    "uglify": "node node_modules/uglify-es/bin/uglifyjs index.js --compress --mangle -o dist/marker-navigation.min.js --keep-fnames --source-map",
+    "js": "npm run lint && npm run uglify",
+    "watch": "onchange \"index.js\" -- npm run js",
+    "prepush": "npm run test && npm run js"
+  },
+  "keywords": [
+    "Google",
+    "Maps"
+  ],
+  "author": "@riotrah",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.8.0",
+    "eslint-config-google": "^0.9.1",
+    "husky": "^0.14.3",
+    "istanbul": "^0.4.5",
+    "mocha": "^4.0.0",
+    "onchange": "^3.2.1",
+    "uglify-es": "^3.1.3"
+  }
+}
