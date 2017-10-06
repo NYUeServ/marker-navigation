@@ -262,7 +262,7 @@ function __getMarkerIconsFromMarkers(markers) {
 
   if (markers) {
 
-    return markers.map((marker) => { marker.getIcon(); });
+    return markers.map((marker) => marker.icon);
   }
 }
 
