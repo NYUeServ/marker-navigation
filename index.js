@@ -36,28 +36,28 @@ function keyNavInit(mapDiv, map, markers, icons, distinctMarkerIconFlag) {
   .children[0];
 
   // Create static vars for this maps extension
-  google.maps.markerNav = {};
+  google.maps.markerNavigation = {};
   // Keep passed markers in object
-  google.maps.markerNav.markers = markers;
+  google.maps.markerNavigation.markers = markers;
   // Currently selected marker's index in Markers
-  google.maps.markerNav.currentMarker = -1; 
-  google.maps.markerNav.markerIcons = []; 
-  google.maps.markerNav.updateMarkerCount = updateMarkerCount;
+  google.maps.markerNavigation.currentMarker = -1; 
+  google.maps.markerNavigation.markerIcons = []; 
+  google.maps.markerNavigation.updateMarkerCount = updateMarkerCount;
 
   __addTabNavToMapMarkers(map, internalMapDiv);
 
   if (icons) {
     if (icons.selected) {
-      google.maps.markerNav.selectedMarkerIcon = icons.selected;
+      google.maps.markerNavigation.selectedMarkerIcon = icons.selected;
     }
     if (icons.deselected) {
-      google.maps.markerNav.deselectedMarkerIcon = icons.deselected;
+      google.maps.markerNavigation.deselectedMarkerIcon = icons.deselected;
     }
   }
 
   if (distinctMarkerIconFlag) {
 
-    google.maps.markerNav.markerIcons = __getMarkerIconsFromMarkers(markers);
+    google.maps.markerNavigation.markerIcons = __getMarkerIconsFromMarkers(markers);
   }
 
   /**
@@ -66,10 +66,10 @@ function keyNavInit(mapDiv, map, markers, icons, distinctMarkerIconFlag) {
   internalMapDiv.addEventListener('focusout', (e) => {
 
     __deselectMarker(
-      google.maps.markerNav.previousMarkerListener,
-      google.maps.markerNav.markers[google.maps.markerNav.currentMarker]
+      google.maps.markerNavigation.previousMarkerListener,
+      google.maps.markerNavigation.markers[google.maps.markerNavigation.currentMarker]
     ); 
-    google.maps.markerNav.currentMarker = -1;
+    google.maps.markerNavigation.currentMarker = -1;
   });
 }
 
@@ -91,7 +91,7 @@ function keyNavInit(mapDiv, map, markers, icons, distinctMarkerIconFlag) {
  */
 function __addTabNavToMapMarkers(map, mapDiv) {
 
-  const markers = google.maps.markerNav.markers || [];
+  const markers = google.maps.markerNavigation.markers || [];
 
   google.maps.event.addDomListener(document, 'keydown', (e) => {
 
@@ -103,11 +103,11 @@ function __addTabNavToMapMarkers(map, mapDiv) {
       direction = !e.shiftKey;
       if (direction) {
 
-        google.maps.markerNav.currentMarker = -1;
+        google.maps.markerNavigation.currentMarker = -1;
 
       } else {
 
-        google.maps.markerNav.currentMarker = markers.length;
+        google.maps.markerNavigation.currentMarker = markers.length;
       }
 
     } else if (document.activeElement === mapDiv 
@@ -121,23 +121,23 @@ function __addTabNavToMapMarkers(map, mapDiv) {
        * to the function upon next call. This ensures that the previous 
        * listener is deactivated to save some mem.
        */
-      google.maps.markerNav.previousMarkerListener = 
+      google.maps.markerNavigation.previousMarkerListener = 
         __iterateMarkers(
-          google.maps.markerNav.previousMarkerListener, 
+          google.maps.markerNavigation.previousMarkerListener, 
           map, 
           mapDiv, 
           shift, 
           markers
         );
 
-      if (google.maps.markerNav.currentMarker >= markers.length 
+      if (google.maps.markerNavigation.currentMarker >= markers.length 
         && !shift) {
 
-        google.maps.markerNav.currentMarker = markers.length;
+        google.maps.markerNavigation.currentMarker = markers.length;
 
-      } else if (google.maps.markerNav.currentMarker <= -1 && shift) {
+      } else if (google.maps.markerNavigation.currentMarker <= -1 && shift) {
 
-        google.maps.markerNav.currentMarker = -1;
+        google.maps.markerNavigation.currentMarker = -1;
 
       } else {
 
@@ -163,8 +163,8 @@ function __addTabNavToMapMarkers(map, mapDiv) {
  */
 function __iterateMarkers(listener, map, mapDiv, shift) {
 
-  const markers = google.maps.markerNav.markers || [];
-  if (!markers.length) { google.maps.markerNav.currentMarker = 0; } 
+  const markers = google.maps.markerNavigation.markers || [];
+  if (!markers.length) { google.maps.markerNavigation.currentMarker = 0; } 
 
   const mod = shift
     ? -1
@@ -173,11 +173,11 @@ function __iterateMarkers(listener, map, mapDiv, shift) {
   const newListener = __selectMarker(
     map,
     mapDiv, 
-    markers[google.maps.markerNav.currentMarker + mod]
+    markers[google.maps.markerNavigation.currentMarker + mod]
   );
 
-  __deselectMarker(listener, markers[google.maps.markerNav.currentMarker]);
-  google.maps.markerNav.currentMarker += mod;
+  __deselectMarker(listener, markers[google.maps.markerNavigation.currentMarker]);
+  google.maps.markerNavigation.currentMarker += mod;
 
   return newListener;
 }
@@ -196,9 +196,9 @@ function __deselectMarker(enterListener, marker) {
 
   if (!marker) { return; } 
 
-  const icon = google.maps.markerNav.markerIcons.length 
-    ? google.maps.markerNav.markerIcons[google.maps.markerNav.currentMarker]
-    : google.maps.markerNav.deselectedMarkerIcon;
+  const icon = google.maps.markerNavigation.markerIcons.length 
+    ? google.maps.markerNavigation.markerIcons[google.maps.markerNavigation.currentMarker]
+    : google.maps.markerNavigation.deselectedMarkerIcon;
 
   marker.setIcon(icon);
 
@@ -221,7 +221,7 @@ function __selectMarker(map, mapDiv, marker) {
 
   if (!marker) { return; }
 
-  marker.setIcon(google.maps.markerNav.selectedMarkerIcon);
+  marker.setIcon(google.maps.markerNavigation.selectedMarkerIcon);
   // Should pan as well 
   map.panTo(marker.getPosition());
   return __addClickMarkerViaEnterKey(mapDiv, marker);
@@ -275,9 +275,9 @@ function __getMarkerIconsFromMarkers(markers) {
 const updateMarkerCount = (markers) => {
 
   // Set markers
-  google.maps.markerNav.markers = markers;
-  google.maps.markerNav.markerIcons = __getMarkerIconsFromMarkers(markers);
+  google.maps.markerNavigation.markers = markers;
+  google.maps.markerNavigation.markerIcons = __getMarkerIconsFromMarkers(markers);
   
   // Clear previous marker enter listener
-  google.maps.markerNav.previousMarkerListener = undefined;
+  google.maps.markerNavigation.previousMarkerListener = undefined;
 };
